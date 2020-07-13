@@ -3,7 +3,7 @@ FROM node:12.16-slim as builder
 ARG DEVELOPER
 ENV STANDALONE=1
 
-# Install build c-lightning for third-party packages (c-lightning/bitcoind)
+# Install build c-lightning for third-party packages (c-lightning/beyondcoind)
 RUN apt-get update && apt-get install -y --no-install-recommends git wget ca-certificates \
     qemu qemu-user-static qemu-user binfmt-support
 

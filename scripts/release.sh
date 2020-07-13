@@ -1,8 +1,8 @@
 #!/bin/bash
 set -xeo pipefail
 
-gh_repo=shesek/spark-wallet
-docker_name=shesek/spark-wallet
+gh_repo=beyondcoin-projecdt/beyondcoin-spark
+docker_name=beyondcoin-project/beyondcoin-spark
 
 [ -z "$1" ] && { echo >&2 "version bump argument required, e.g. $0 patch"; exit 1; }
 
@@ -22,12 +22,12 @@ grep '## Unreleased' CHANGELOG.md && sed -i "s/^## Unreleased/## $version - `dat
 # Try loading Android signing keys
 [[ -z "$ANDROID_SIGN_CONFIG" && -f ../spark-signing-keys/build.json ]] && ANDROID_SIGN_CONFIG=`pwd`/../spark-signing-keys/build.json
 
-echo -e "Building Spark v$version\n\n$changelog\n\n"
+echo -e "Building Beyondcoin Spark v$version\n\n$changelog\n\n"
 
 # Build NPM, Electron and Cordova dist files
 if [[ -z "$SKIP_BUILD" ]]; then
   # clean up previous builds
-  rm -rf docker-builds spark-wallet-*-npm.tgz dist electron/dist cordova/platforms/android/app/build/outputs/apk
+  rm -rf docker-builds beyondcoin-spark-*-npm.tgz dist electron/dist cordova/platforms/android/app/build/outputs/apk
   mkdir -p cordova/platforms/android/app/build/outputs/apk
 
   # Build using Docker for reproducibility
@@ -37,7 +37,7 @@ if [[ -z "$SKIP_BUILD" ]]; then
     docker run --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined \
                -it --rm -v `pwd`/docker-builds:/target -e OWNER=`id -u`:`id -g` spark-builder
     # unpack new builds to appropriate locations
-    mv docker-builds/spark-wallet-*-npm.tgz .
+    mv docker-builds/beyondcoin-spark-*-npm.tgz .
     mv -f docker-builds/npm-unpacked dist
     mv -f docker-builds/electron electron/dist
     mv -f docker-builds/cordova-android-debug cordova/platforms/android/app/build/outputs/apk/debug
@@ -130,7 +130,7 @@ if [[ -z "$SKIP_UPLOAD" && -n "$GH_TOKEN" ]]; then
   gh_upload=`echo "$gh_release" | jq -r .upload_url | sed -e 's/{?name,label}//'`
 
   for file in SHA256SUMS.asc \
-              spark-wallet-*-npm.tgz \
+              beyondcoin-spark-*-npm.tgz \
               electron/dist/*.{AppImage,deb,snap,tar.gz,exe,zip} \
               cordova/platforms/android/app/build/outputs/apk/{debug,release}/*.apk; do
     echo ">> Uploading $file"

@@ -1,5 +1,5 @@
 [Unit]
-Description=Spark Lightning Wallet
+Description=Beyondcoin Spark Lightning Wallet
 Requires=lightningd.service
 After=lightningd.service
 
@@ -10,8 +10,8 @@ Restart=on-failure
 
 ExecStart={cmd}
 
-SyslogIdentifier=spark-wallet
-PIDFile=/var/run/spark-wallet.pid
+SyslogIdentifier=beyondcoin-spark
+PIDFile=/var/run/beyondcoin-spark.pid
 StandardInput=null
 StandardOutput=syslog
 StandardError=syslog

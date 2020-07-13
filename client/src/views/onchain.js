@@ -5,7 +5,7 @@ const labelType = { bech32: 'Bech32', 'p2sh-segwit': 'P2SH' }
     , otherType = { bech32: 'p2sh-segwit', 'p2sh-segwit': 'bech32' }
 
 // Encode bech32 as uppercase to enable the more compact alphanumeric QR mode
-const addrQr = (address, type) => qruri(`bitcoin:${type == 'bech32' ? address.toUpperCase() : address}`)
+const addrQr = (address, type) => qruri(`beyondcoin:${type == 'bech32' ? address.toUpperCase() : address}`)
 
 export const deposit = ({ address, type }) => addrQr(address, type).then(qr => ({ funds, obalance, unitf, conf: { expert } }) =>
   div('.onchain-deposit', [
@@ -20,7 +20,7 @@ export const deposit = ({ address, type }) => addrQr(address, type).then(qr => (
       ])
     ])
   , div('.my-4.text-center', [
-      a('.btn.btn-primary.btn-lg.mb-1', { attrs: { href: `bitcoin:${address}` } }, 'Open wallet')
+      a('.btn.btn-primary.btn-lg.mb-1', { attrs: { href: `beyondcoin:${address}` } }, 'Open wallet')
     , ' '
     , button('.btn.btn-secondary.btn-lg.mb-1', { dataset: { newaddrType: otherType[type] } }, `Switch to ${labelType[otherType[type]]}`)
     ])

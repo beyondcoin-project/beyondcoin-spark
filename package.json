@@ -1,5 +1,5 @@
 {
-  "name": "spark-wallet",
+  "name": "beyondcoin-spark",
   "version": "0.2.14",
   "androidVer": 216,
   "description": "A minimalistic wallet GUI for c-lightning",
@@ -12,20 +12,20 @@
     "dist:electron": "cd electron && npm run dist --",
     "release": "./scripts/release.sh"
   },
-  "repository": "https://github.com/shesek/spark-wallet",
+  "repository": "https://github.com/beyondcoin-project/beyondcoin-spark",
   "files": [
     "dist",
     "npm-shrinkwrap.json"
   ],
   "keywords": [
-    "bitcoin",
+    "beyondcoin",
     "lightning",
     "wallet",
     "lightning-wallet",
     "lightning-network",
     "c-lightning"
   ],
-  "author": "Nadav Ivgi",
+  "author": "Beyondcoin Developers",
   "license": "MIT",
   "engines": {
     "node": ">=6.0.0"

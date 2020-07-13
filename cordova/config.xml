@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.spark.wallet" version="0.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Spark</name>
+<widget id="com.beyondcoin.spark" version="0.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Beyondcoin Spark</name>
     <description>A minimalistic wallet GUI for c-lightning</description>
-    <author email="nadav@shesek.info" href="https://github.com/shesek">Nadav Ivgi</author>
+    <author email="support@beyondcoin.io" href="https://github.com/beyondcoin-project">Beyondcoin Developers</author>
     <content src="index.html" />
     <access origin="*" />
-    <allow-intent href="bitcoin:*" />
+    <allow-intent href="beyondcoin:*" />
     <platform name="android">
         <icon density="ldpi" src="res/android/icon-36-ldpi.png" />
         <icon density="mdpi" src="res/android/icon-48-mdpi.png" />

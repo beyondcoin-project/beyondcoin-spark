@@ -2,7 +2,7 @@ import big from 'big.js'
 import { Observable as O } from './rxjs'
 import { dbg, getChannels, formatAmt, recvAmt, combine, isConnError } from './util'
 
-const msatbtc = big(100000000000) // msat in 1 btc
+const msatbynd = big(100000000000) // msat in 1 bynd
 
 const
   sumChans = chans =>
@@ -20,9 +20,9 @@ const
 
 const
   themes   = 'cerulean cosmo cyborg dark flatly lumen lux materia sandstone simplex slate solar spacelab superhero united yeti'.split(' ')
-, units    = 'sat bits milli btc usd'.split(' ')
-, unitprec = { sat: 3, bits: 5, milli: 8, btc: 11, usd: 6 }
-, unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
+, units    = 'sat bits milli bynd usd'.split(' ')
+, unitprec = { sat: 3, bits: 5, milli: 8, bynd: 11, usd: 6 }
+, unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, bynd: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.000001 }
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$
@@ -31,7 +31,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
                   , conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$, funds$
                   , funded$, closed$
-                  , btcusd$, info$, peers$ }) => {
+                  , byndusd$, info$, peers$ }) => {
   const
 
   // Config options
@@ -42,7 +42,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , conf$    = combine({ expert$, theme$, unit$ })
 
   // Currency & unit conversion handling
-  , msatusd$ = btcusd$.map(rate => big(rate).div(msatbtc)).startWith(null)
+  , msatusd$ = byndusd$.map(rate => big(rate).div(msatbynd)).startWith(null)
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
   , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitprec[unit]) : 'n/a'} ${unit}`)
 
@@ -177,6 +177,6 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , feed$: feed$.startWith(null), feedStart$, feedActive$
   , amtData$, chanActive$, rpcHist$
   , fundMaxChan$
-  , msatusd$, btcusd$: btcusd$.startWith(null)
+  , msatusd$, byndusd$: byndusd$.startWith(null)
   }).shareReplay(1)
 }

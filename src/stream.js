@@ -26,7 +26,7 @@ module.exports = lnPath => {
       .then(r => Math.max(...r.invoices.map(inv => inv.pay_index || 0)))
       .then(waitany))
 
-  // Periodically pull BTC<->USD exchange rate
+  // Periodically pull BYND<->USD exchange rate
   let lastRate
   if (fetchRate) {
     (async function getrate() {
@@ -60,7 +60,7 @@ module.exports = lnPath => {
     const onPay = inv => write(`event:inv-paid\ndata:${ JSON.stringify(inv) }`)
     em.on('payment', onPay)
 
-    const onRate = rate => write(`event:btcusd\ndata:${ JSON.stringify(rate) }`)
+    const onRate = rate => write(`event:byndusd\ndata:${ JSON.stringify(rate) }`)
     em.on('rate', onRate)
     lastRate && onRate(lastRate)
 

@@ -1,7 +1,7 @@
 {
   "name": "spark-fonts",
   "private": true,
-  "author": "Nadav Ivgi",
+  "author": "Beyondcoin Developers",
   "license": "MIT",
   "dependencies": {
     "typeface-lato": "0.0.75",

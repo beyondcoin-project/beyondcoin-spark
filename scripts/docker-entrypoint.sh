@@ -6,7 +6,7 @@ trap 'jobs -p | xargs -r kill' SIGTERM
 : ${LIGHTNINGD_OPT:=--log-level=debug}
 : ${BITCOIND_OPT:=-debug=rpc --printtoconsole=0}
 
-[[ "$NETWORK" == "mainnet" ]] && NETWORK=bitcoin
+[[ "$NETWORK" == "mainnet" ]] && NETWORK=beyondcoin
 
 if [ -d /etc/lightning ]; then
   echo -n "Using lightningd directory mounted in /etc/lightning... "
@@ -17,46 +17,46 @@ if [ -d /etc/lightning ]; then
   fi
 else
 
-  # Setup bitcoind (only needed when we're starting our own lightningd instance)
-  if [ -d /etc/bitcoin ]; then
-    echo -n "Connecting to bitcoind configured in /etc/bitcoin... "
+  # Setup beyondcoind (only needed when we're starting our own lightningd instance)
+  if [ -d /etc/beyondcoin ]; then
+    echo -n "Connecting to beyondcoind configured in /etc/beyondcoin... "
 
-    RPC_OPT="-datadir=/etc/bitcoin $([[ -z "$BITCOIND_RPCCONNECT" ]] || echo "-rpcconnect=$BITCOIND_RPCCONNECT")"
+    RPC_OPT="-datadir=/etc/beyondcoin $([[ -z "$BITCOIND_RPCCONNECT" ]] || echo "-rpcconnect=$BITCOIND_RPCCONNECT")"
 
   elif [ -n "$BITCOIND_URI" ]; then
     [[ "$BITCOIND_URI" =~ ^[a-z]+:\/+(([^:/]+):([^@/]+))@([^:/]+:[0-9]+)/?$ ]] || \
-      { echo >&2 "ERROR: invalid bitcoind URI: $BITCOIND_URI"; exit 1; }
+      { echo >&2 "ERROR: invalid beyondcoind URI: $BITCOIND_URI"; exit 1; }
 
-    echo -n "Connecting to bitcoind at ${BASH_REMATCH[4]}... "
+    echo -n "Connecting to beyondcoind at ${BASH_REMATCH[4]}... "
 
     RPC_OPT="-rpcconnect=${BASH_REMATCH[4]}"
 
     if [ "${BASH_REMATCH[2]}" != "__cookie__" ]; then
       RPC_OPT="$RPC_OPT -rpcuser=${BASH_REMATCH[2]} -rpcpassword=${BASH_REMATCH[3]}"
     else
-      RPC_OPT="$RPC_OPT -datadir=/tmp/bitcoin"
-      [[ "$NETWORK" == "bitcoin" ]] && NET_PATH=/tmp/bitcoin || NET_PATH=/tmp/bitcoin/$NETWORK
+      RPC_OPT="$RPC_OPT -datadir=/tmp/beyondcoin"
+      [[ "$NETWORK" == "beyondcoin" ]] && NET_PATH=/tmp/beyondcoin || NET_PATH=/tmp/beyondcoin/$NETWORK
       mkdir -p $NET_PATH
       echo "${BASH_REMATCH[1]}" > $NET_PATH/.cookie
     fi
 
   else
-    echo -n "Starting bitcoind... "
+    echo -n "Starting beyondcoind... "
 
-    mkdir -p /data/bitcoin
-    RPC_OPT="-datadir=/data/bitcoin"
+    mkdir -p /data/beyondcoin
+    RPC_OPT="-datadir=/data/beyondcoin"
 
-    if [ "$NETWORK" != "bitcoin" ]; then
+    if [ "$NETWORK" != "beyondcoin" ]; then
       BITCOIND_NET_OPT="-$NETWORK"
     fi
 
-    bitcoind $BITCOIND_NET_OPT $RPC_OPT $BITCOIND_OPT &
+    beyondcoind $BITCOIND_NET_OPT $RPC_OPT $BITCOIND_OPT &
     echo -n "waiting for cookie... "
-    sed --quiet '/^\.cookie$/ q' <(inotifywait -e create,moved_to --format '%f' -qmr /data/bitcoin)
+    sed --quiet '/^\.cookie$/ q' <(inotifywait -e create,moved_to --format '%f' -qmr /data/beyondcoin)
   fi
 
   echo -n "waiting for RPC... "
-  bitcoin-cli $BITCOIND_NET_OPT $RPC_OPT -rpcwait getblockchaininfo > /dev/null
+  beyondcoin-cli $BITCOIND_NET_OPT $RPC_OPT -rpcwait getblockchaininfo > /dev/null
   echo "ready."
 
   # Setup lightning
@@ -68,7 +68,7 @@ else
   lnopt=($LIGHTNINGD_OPT --network=$NETWORK --lightning-dir=$LN_BASE --log-file=debug.log)
   [[ -z "$LN_ALIAS" ]] || lnopt+=(--alias="$LN_ALIAS")
 
-  lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') > /dev/null &
+  lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--beyondcoin-/g') > /dev/null &
 
   LN_PATH=$LN_BASE/$NETWORK
   mkdir -p $LN_PATH
@@ -84,7 +84,7 @@ fi
 if command -v lightning-cli > /dev/null; then
   # workaround for https://github.com/ElementsProject/lightning/issues/3352
   # (patch is on its way! but this will have to be kept around for v0.8.0 compatibility)
-  mkdir -p /tmp/dummy /tmp/dummy/bitcoin
+  mkdir -p /tmp/dummy /tmp/dummy/beyondcoin
   lightning-cli --lightning-dir /tmp/dummy --rpc-file $LN_PATH/lightning-rpc getinfo > /dev/null
   echo -n "c-lightning RPC ready."
   rm -r /tmp/dummy
@@ -93,16 +93,16 @@ fi
 mkdir -p $TOR_PATH/tor-installation/node_modules
 
 if [ -z "$STANDALONE" ]; then
-  # when not in standalone mode, run spark-wallet as an additional background job
-  echo -e "\nStarting spark wallet..."
+  # when not in standalone mode, run beyondcoin-spark as an additional background job
+  echo -e "\nStarting beyondcoin spark wallet..."
   spark-wallet -l $LN_PATH "$@" $SPARK_OPT &
 
   # shutdown the entire process when any of the background jobs exits (even if successfully)
   wait -n
   kill -TERM $$
 else
-  # in standalone mode, replace the process with spark-wallet
-  echo -e "\nStarting spark wallet (standalone mode)..."
+  # in standalone mode, replace the process with beyondcoin-spark
+  echo -e "\nStarting beyondcoin spark wallet (standalone mode)..."
   exec spark-wallet -l $LN_PATH "$@" $SPARK_OPT
 fi
 

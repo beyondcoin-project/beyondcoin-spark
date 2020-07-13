@@ -1,11 +1,4 @@
-# Spark Lightning Wallet
-
-[![npm release](https://img.shields.io/npm/v/spark-wallet.svg)](https://www.npmjs.com/package/spark-wallet)
-[![build status](https://api.travis-ci.org/shesek/spark-wallet.svg)](https://travis-ci.org/shesek/spark-wallet)
-[![docker release](https://img.shields.io/docker/pulls/shesek/spark-wallet.svg)](https://hub.docker.com/r/shesek/spark-wallet)
-[![MIT license](https://img.shields.io/github/license/shesek/spark-wallet.svg)](https://github.com/shesek/spark-wallet/blob/master/LICENSE)
-[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-[![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=spark-wallet)
+# Beyondcoin Spark Lightning Wallet
 
 :zap: Simple & minimalistic
 :zap: Purely off-chain
@@ -24,16 +17,23 @@
 
 ## Contents
 
-- [Introduction](#introduction)
-- [Server installation](#server-installation) (for web access)
-- [Desktop apps](#desktop-apps) (for Linux, macOS and Windows)
-- [Mobile app](#mobile-app) (for Android, iOS coming soon)
-- [Progressive Web App](#progressive-web-app)
-- [GUI settings & controls](#gui-settings--controls)
-- [Browser support](#browser-support)
-- [Developing](#developing)
-- [Code signing & reproducible builds](#code-signing--reproducible-builds)
-- [CLI options](#cli-options)
+- [Beyondcoin Spark Lightning Wallet](#beyondcoin-spark-lightning-wallet)
+  - [Contents](#contents)
+  - [Introduction](#introduction)
+  - [Server installation](#server-installation)
+      - [Configuration file](#configuration-file)
+      - [Connecting remotely](#connecting-remotely)
+      - [Deploy with Docker](#deploy-with-docker)
+      - [Adding to startup with `systemd`](#adding-to-startup-with-systemd)
+  - [Desktop apps](#desktop-apps)
+  - [Mobile app](#mobile-app)
+  - [Progressive Web App](#progressive-web-app)
+  - [GUI settings & controls](#gui-settings--controls)
+  - [Browser support](#browser-support)
+  - [Developing](#developing)
+  - [Reproducible builds](#reproducible-builds)
+  - [CLI options](#cli-options)
+  - [License](#license)
 
 ## Introduction
 
@@ -110,7 +110,7 @@ the advantages of using an hidden service, and instructions for connecting from 
 
 #### Deploy with Docker
 
-Spark is also available as a Docker image that comes bundled with bitcoind and c-lightning.
+Spark is also available as a Docker image that comes bundled with beyondcoind and c-lightning.
 See [`doc/docker.md`](doc/docker.md) for details.
 
 #### Adding to startup with `systemd`
@@ -121,9 +121,9 @@ See [`doc/startup-systemd.md`](doc/startup-systemd.md).
 
 Electron-based desktop apps for Linux (packaged as `deb`, `AppImage`, `snap` and `tar.gz`),
 macOS (as `zip`) and Windows (installer and a portable) are available for download from the
-[releases page](https://github.com/shesek/spark-wallet/releases).
+[releases page](https://github.com/beyondcoin-project/beyondcoin-spark/releases).
 
-The desktop apps comes bundled with the Spark server-side component. If you're connecting to a local
+The desktop apps comes bundled with the Beyondcoin Spark server-side component. If you're connecting to a local
 c-lightning instance, you [can configure](https://user-images.githubusercontent.com/877904/44618385-68f40100-a87d-11e8-891b-79a0f2d59751.png)
 the desktop app to connect to it directly without manually setting up the Spark server.
 
@@ -133,10 +133,10 @@ running c-lightning and connecting through it.
 ## Mobile app
 
 A Cordova-based native app for Android is available for download from the
-[Google Play app store](https://play.google.com/store/apps/details?id=com.spark.wallet)
-or from the [releases page](https://github.com/shesek/spark-wallet/releases).
+<!--[Google Play app store](https://play.google.com/store/apps/details?id=com.beyondcoin.spark)-->
+or from the [releases page](https://github.com/beyondcoin-project/beyondcoin-spark/releases).
 
-The app requires a Spark server to communicate with, which you need [to setup](#server-installation) as a prerequisite.
+The app requires a Beyondcoin Spark server to communicate with, which you need [to setup](#server-installation) as a prerequisite.
 
 When the app starts for the first time, you'll need to configure your Spark server URL and API access key.
 You can print your access key to the console by starting Spark with `--print-key/-k`.
@@ -174,7 +174,7 @@ The QR scanner works if you access Spark without using the PWA "Add to homescree
 - **Pay** and **Request** are pretty intuitive and don't require much explaining. Try them!
 
 - **Display unit:** Click the balance on the top-right or the unit in the "request payment" page to toggle the currency display unit.
-  The available options are sat, bits, milli, btc and usd.
+  The available options are sat, bits, milli, bynd and usd.
 
 - **Theme switcher:** Click the theme name on the bottom-right to change themes (you can choose between 16 [bootswatch](https://bootswatch.com) themes).
 
@@ -206,7 +206,7 @@ with bootstrap for theming and a nodejs/express server as the backend.
 To start a development server with live compilation for babel, browserify, pug and stylus, run:
 
 ```bash
-$ git clone https://github.com/shesek/spark-wallet && cd spark-wallet
+$ git clone https://github.com/beyondcoin-project/beyondcoin-spark && cd beyondcoin-spark
 $ npm install
 $ npm start -- --ln-path /data/lightning
 ```
@@ -214,7 +214,7 @@ $ npm start -- --ln-path /data/lightning
 Spark can be built from source using the following commands (more efficient than running the live compliation development server):
 
 ```bash
-$ git clone https://github.com/shesek/spark-wallet && cd spark-wallet
+$ git clone https://github.com/beyondcoin-project/spark && cd beyondcoin-spark
 $ npm run dist:npm
 $ ./dist/cli.js --ln-path /data/lightning
 ```
@@ -233,27 +233,14 @@ See [`doc/dev-regtest-env.md`](doc/dev-regtest-env.md) for instructions setting 
 
 Pull requests, suggestions and comments are welcome!
 
-## Code signing & reproducible builds
-
-Signed distribution checksums are available in the git repo at
-[`SHA256SUMS.asc`](SHA256SUMS.asc)
-(updated with every versioned release)
-and on the [releases page](https://github.com/shesek/spark-wallet/releases).
-Git version tags are signed too.
-
-The releases are signed by Nadav Ivgi (@shesek).
-The public key can be verified on [keybase](https://keybase.io/nadav),
-[github](https://api.github.com/users/shesek/gpg_keys),
-[twitter](https://twitter.com/shesek) (under bio),
-[HN](https://news.ycombinator.com/user?id=nadaviv)
-or on [a domain he's known to control](https://www.bitrated.com/.keys/staff/nadav.asc).
+## Reproducible builds
 
 To install the signed NPM package, download it from
-[the releases page](https://github.com/shesek/spark-wallet/releases), verify the hash
-and install using `$ npm install -g spark-wallet-[x.y.z]-npm.tgz`.
+[the releases page](https://github.com/beyondcoin-project/beyondcoin-spark/releases), verify the hash
+and install using `$ npm install -g beyondcoin-spark-[x.y.z]-npm.tgz`.
 
 To install the signed Docker image, get the image hash from `SHA256SUMS.asc` and install it with
-`$ docker pull shesek/spark-wallet@sha256:[image-hash-verified-by-be-signed]`.
+`$ docker pull beyondcoin-project/beyondcoin-spark@sha256:[image-hash-verified-by-be-signed]`.
 
 The NPM package, Android `apk` builds, Linux `tar.gz`/`snap` builds, macOS `zip` builds and Windows builds (installer and portable)
 [are deterministically reproducible](doc/reproducible-builds.md).
@@ -276,7 +263,7 @@ $ spark-wallet --help
     -C, --cookie-file <path> persist generated login credentials to <path> or load them [default: ~/.spark-wallet/cookie]
     --no-cookie-file         disable cookie file [default: false]
 
-    --rate-provider <name>   exchange rate provider, one of "bitstamp" or "wasabi" (requires tor) [default: bitstamp]
+    --rate-provider <name>   exchange rate provider, one of "coingecko" or "wasabi" (requires tor) [default: coingecko]
     --no-rates               disable exchange rate lookup [default: false]
     --proxy <uri>            set a proxy for looking up rates, e.g. socks5h://127.0.0.1:9050 [default: none]
 

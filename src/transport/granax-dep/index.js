@@ -18,7 +18,7 @@ module.exports = async _ => {
   try { return require('@deadcanaries/granax') } catch (_) {}
 
   console.log('\nTor Hidden Service enabled (via --onion) for the first time, downloading the Tor Bundle...'
-            + '\nThe Spark .onion server will start automatically when its ready.'
+            + '\nThe Beyondcoin Spark .onion server will start automatically when its ready.'
             + '\n\nIn the meanwhile, you can access the local HTTP server directly.\n')
 
   // trigger an "npm install" for granax-dep/package.json

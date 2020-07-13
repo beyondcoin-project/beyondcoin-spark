@@ -1,10 +1,10 @@
 FROM node:12.16-slim as builder
 
 ARG DEVELOPER
-ARG STANDALONE
+ARG STANDALONE=1
 ENV STANDALONE=$STANDALONE
 
-# Install build c-lightning for third-party packages (c-lightning/bitcoind)
+# Install build c-lightning for third-party packages (c-lightning/beyondcoind)
 RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates gpg dirmngr wget  \
     $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext libtool libgmp-dev \
                                      libsqlite3-dev python python3 python3-mako wget zlib1g-dev")
@@ -21,28 +21,28 @@ RUN [ -n "$STANDALONE" ] || ( \
     && DEVELOPER=$DEVELOPER ./configure \
     && make)
 
-# Install bitcoind
-ENV BITCOIN_VERSION 0.19.1
-ENV BITCOIN_FILENAME bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
-ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/$BITCOIN_FILENAME
-ENV BITCOIN_SHA256 5fcac9416e486d4960e1a946145566350ca670f9aaba99de6542080851122e4c
-ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
-ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
+# Install beyondcoind
+ENV BEYONDCOIN_VERSION 0.19.1
+ENV BEYONDCOIN_FILENAME beyondcoin-$BEYONDCOIN_VERSION-x86_64-linux-gnu.tar.gz
+ENV BEYONDCOIN_URL https://beyondcoin.io/bin/beyondcoin-core-$BEYONDCOIN_VERSION/$BEYONDCOIN_FILENAME
+ENV BEYONDCOIN_SHA256 5fcac9416e486d4960e1a946145566350ca670f9aaba99de6542080851122e4c
+ENV BEYONDCOIN_ASC_URL https://beyondcoin.io/bin/beyondcoin-core-$BEYONDCOIN_VERSION/SHA256SUMS.asc
+ENV BEYONDCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
 RUN [ -n "$STANDALONE" ] || \
-    (mkdir /opt/bitcoin && cd /opt/bitcoin \
-    && wget -qO "$BITCOIN_FILENAME" "$BITCOIN_URL" \
-    && echo "$BITCOIN_SHA256 $BITCOIN_FILENAME" | sha256sum -c - \
-    && gpg --keyserver keyserver.ubuntu.com --recv-keys "$BITCOIN_PGP_KEY" \
-    && wget -qO bitcoin.asc "$BITCOIN_ASC_URL" \
-    && gpg --verify bitcoin.asc \
-    && cat bitcoin.asc | grep "$BITCOIN_FILENAME" | sha256sum -c - \
-    && BD=bitcoin-$BITCOIN_VERSION/bin \
-    && tar -xzvf "$BITCOIN_FILENAME" $BD/bitcoind $BD/bitcoin-cli --strip-components=1)
+    (mkdir /opt/beyondcoin && cd /opt/beyondcoin \
+    && wget -qO "$BEYONDCOIN_FILENAME" "$BEYONDCOIN_URL" \
+    && echo "$BEYONDCOIN_SHA256 $BEYONDCOIN_FILENAME" | sha256sum -c - \
+    && gpg --keyserver keyserver.ubuntu.com --recv-keys "$BEYONDCOIN_PGP_KEY" \
+    && wget -qO beyondcoin.asc "$BEYONDCOIN_ASC_URL" \
+    && gpg --verify beyondcoin.asc \
+    && cat beyondcoin.asc | grep "$BEYONDCOIN_FILENAME" | sha256sum -c - \
+    && BD=beyondcoin-$BEYONDCOIN_VERSION/bin \
+    && tar -xzvf "$BEYONDCOIN_FILENAME" $BD/beyondcoind $BD/beyondcoin-cli --strip-components=1)
 
 RUN mkdir /opt/bin && ([ -n "$STANDALONE" ] || \
     (mv /opt/lightningd/cli/lightning-cli /opt/bin/ \
     && mv /opt/lightningd/lightningd/lightning* /opt/bin/ \
-    && mv /opt/bitcoin/bin/* /opt/bin/))
+    && mv /opt/beyondcoin/bin/* /opt/bin/))
 # npm doesn't normally like running as root, allow it since we're in docker
 RUN npm config set unsafe-perm true
 
@@ -51,7 +51,7 @@ RUN wget -qO /opt/bin/tini "https://github.com/krallin/tini/releases/download/v0
     && echo "12d20136605531b09a2c2dac02ccee85e1b874eb322ef6baf7561cd93f93c855 /opt/bin/tini" | sha256sum -c - \
     && chmod +x /opt/bin/tini
 
-# Install Spark
+# Install Beyondcoin Spark
 WORKDIR /opt/spark/client
 COPY client/package.json client/npm-shrinkwrap.json ./
 COPY client/fonts ./fonts

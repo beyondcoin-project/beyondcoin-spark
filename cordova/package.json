@@ -1,9 +1,9 @@
 {
-    "name": "com.spark.wallet",
-    "displayName": "SparkWallet",
+    "name": "com.beyondcoin.spark",
+    "displayName": "BeyondcoinSpark",
     "private": true,
     "description": "A minimalistic wallet GUI for c-lightning",
-    "author": "Nadav Ivgi",
+    "author": "Beyondcoin Developers",
     "license": "MIT",
     "scripts": {
         "dist": "./build.sh"
